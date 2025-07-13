@@ -345,51 +345,7 @@ app.post('/sms', (req, res) => {
 
 ---
 
-## 📱 Demo Screenshots
-
-### Farmer Dashboard
-![Farmer Dashboard - AI Market Intelligence](./assets/screenshots/farmer-dashboard.png)
-*Real-time market pricing and AI recommendations for farmers*
-
-### Consumer Interface  
-![Consumer Dashboard - Local First Shopping](./assets/screenshots/consumer-dashboard.png)
-*Location-based farmer prioritization and negotiation tools*
-
-### Negotiation Agent
-![AI Negotiation Assistant](./assets/screenshots/negotiation-agent.png)
-*Smart negotiation with success probability analysis*
-
-### Feature Phone Interface
-![SMS Interface Demo](./assets/screenshots/sms-interface.png)
-*Inclusive access through SMS commands*
-
----
-
-## 🏅 Hackathon Judging Criteria
-
-### 💡 Innovation (25%)
-- **Novel AI Agent Architecture**: Multi-agent system with specialized roles
-- **Inclusive Technology**: First agricultural platform with feature phone support
-- **Real-time Market Intelligence**: Live data integration with predictive analytics
-
-### 🎯 Impact (25%)  
-- **Social Impact**: Empowering 100M+ rural farmers in India
-- **Economic Impact**: 25% increase in farmer income, 15% reduction in consumer costs
-- **Environmental Impact**: 40% reduction in food miles through local prioritization
-
-### 🔧 Technical Excellence (25%)
-- **Scalable Architecture**: Microservices with AI agent orchestration
-- **Blockchain Integration**: Gas-optimized smart contracts with 30% cost reduction
-- **Performance**: Sub-2-second AI responses, 90+ mobile performance score
-
-### 💼 Business Viability (25%)
-- **Market Size**: $400B global agricultural market opportunity
-- **Revenue Model**: Transaction fees + premium AI insights + API licensing
-- **Adoption Strategy**: Pilot with 1000 farmers, scale to 10 states
-
----
-
-## 🚀 Getting Started (Hackathon Judges)
+## 🚀 Getting Started 
 
 ### One-Click Demo Setup
 
@@ -464,37 +420,3 @@ Feature Phone:
 
 ---
 
-## 📊 Metrics & Validation
-
-### Technical Metrics
-```javascript
-{
-  "ai_response_time": "1.8s average",
-  "transaction_speed": "15s average", 
-  "mobile_performance": "92 Lighthouse score",
-  "gas_optimization": "30% reduction vs competitors",
-  "uptime": "99.9% SLA target"
-}
-```
-
-### User Metrics (Demo Data)
-```javascript
-{
-  "farmer_income_increase": "25% average",
-  "consumer_cost_reduction": "15% average", 
-  "transaction_success_rate": "96%",
-  "user_satisfaction": "4.7/5.0 rating",
-  "feature_phone_adoption": "78% rural users"
-}
-```
-
-### Business Metrics
-```javascript
-{
-  "market_size": "$400B global agricultural market",
-  "tam_india": "$50B Indian agricultural market", 
-  "revenue_projection": "$10M ARR by Year 2",
-  "farmer_acquisition_cost": "$5 per farmer",
-  "ltv_ratio": "20:1 LTV/CAC"
-}
-```
