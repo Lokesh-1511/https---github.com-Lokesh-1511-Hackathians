@@ -51,8 +51,7 @@ AgriChain is a revolutionary platform that empowers farmers with AI-driven marke
 ---
 
 ## 📽 Demo
-
-- 🎥 *Video Demo*: [Coming Soon - Hackathon Submission]  
+ 
 - 🖥 *Live App*: [http://localhost:5173](http://localhost:5173) (Local Development)
 - 📱 *Feature Phone Demo*: SMS "HELP" to [Phone Number]
 - 🤖 *AI Agent Demo*: Try price negotiation feature in consumer dashboard
