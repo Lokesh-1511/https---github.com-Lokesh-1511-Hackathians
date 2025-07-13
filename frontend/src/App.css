@@ -1,0 +1,531 @@
+/* App.css - Additional Components Styling for AgriChain */
+
+/* Landing Page Specific Styles */
+.landing-container {
+  background: var(--gradient-background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.landing-title {
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px var(--shadow-soft);
+}
+
+.landing-subtitle {
+  font-size: 1.5rem;
+  color: var(--text-medium);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.landing-buttons {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Login/Registration Forms */
+.auth-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.auth-form {
+  background: var(--pure-white);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+}
+
+.auth-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--primary-green);
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.role-option {
+  padding: 1rem;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
+  background: var(--pure-white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.role-option:hover {
+  border-color: var(--accent-green);
+  transform: translateY(-2px);
+}
+
+.role-option.selected {
+  border-color: var(--accent-green);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.role-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.role-title {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Phone Input Styling */
+.phone-input-container {
+  position: relative;
+}
+
+.country-code {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-medium);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.phone-input {
+  padding-left: 4rem;
+}
+
+/* OTP Verification Page */
+.otp-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.otp-card {
+  background: var(--pure-white);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+}
+
+.otp-title {
+  font-size: 2.5rem;
+  color: var(--primary-green);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.otp-description {
+  color: var(--text-medium);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.otp-input-group {
+  margin: 2rem 0;
+}
+
+.otp-resend {
+  color: var(--accent-green);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.otp-resend:hover {
+  color: var(--primary-green);
+  text-decoration: underline;
+}
+
+/* Dashboard Specific Styles */
+.dashboard-header {
+  background: var(--pure-white);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+}
+
+.dashboard-welcome {
+  font-size: 2rem;
+  color: var(--primary-green);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+  color: var(--text-medium);
+  font-size: 1.1rem;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--pure-white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px var(--shadow-medium);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent-green);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--text-medium);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+/* Product Management */
+.add-product-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  background: var(--gradient-background);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-light);
+}
+
+.product-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Cart Page */
+.cart-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.cart-item {
+  background: var(--pure-white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cart-item-image {
+  width: 80px;
+  height: 80px;
+  background: var(--gradient-background);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.cart-item-price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--golden-yellow);
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--accent-green);
+  background: var(--pure-white);
+  color: var(--accent-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+  background: var(--accent-green);
+  color: var(--text-light);
+}
+
+.quantity-display {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Checkout Summary */
+.checkout-summary {
+  background: var(--pure-white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  position: sticky;
+  top: 100px;
+}
+
+.summary-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+}
+
+.summary-total {
+  border-top: 2px solid var(--border-light);
+  padding-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.summary-total .summary-row {
+  color: var(--primary-green);
+}
+
+/* Farmer Orders Management */
+.order-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border-light);
+  background: var(--pure-white);
+  color: var(--text-medium);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  border-color: var(--accent-green);
+  background: var(--accent-green);
+  color: var(--text-light);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.order-id {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.order-amount {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--golden-yellow);
+}
+
+.order-items {
+  margin: 1rem 0;
+}
+
+.order-item {
+  background: rgba(76, 175, 80, 0.05);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid var(--accent-green);
+}
+
+.order-item-name {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.order-item-details {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* OTP Display for Farmers */
+.otp-display {
+  background: var(--gradient-button);
+  color: var(--text-light);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin: 1rem 0;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.otp-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.otp-code {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.otp-instruction {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 2.5rem;
+  }
+  
+  .landing-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .role-selector {
+    grid-template-columns: 1fr;
+  }
+  
+  .cart-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .order-filters {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 2rem;
+  }
+  
+  .otp-card {
+    padding: 2rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary-row {
+    font-size: 0.9rem;
+  }
+  
+  .otp-code {
+    font-size: 1.5rem;
+    letter-spacing: 0.3rem;
+  }
+}

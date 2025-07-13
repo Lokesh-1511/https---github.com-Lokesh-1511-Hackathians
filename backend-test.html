@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriChain Backend Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>AgriChain Backend Connectivity Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testBackend()">Test Backend Health</button>
+    <button onclick="testRegistration()">Test Registration Endpoint</button>
+    <button onclick="testLogin()">Test Login Endpoint</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, isSuccess) {
+            const div = document.createElement('div');
+            div.className = `test-result ${isSuccess ? 'success' : 'error'}`;
+            div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            resultsDiv.appendChild(div);
+        }
+        
+        async function testBackend() {
+            try {
+                const response = await fetch('http://localhost:5000/api/health');
+                const data = await response.json();
+                addResult(`Backend Health: ${data.message}`, true);
+            } catch (error) {
+                addResult(`Backend Health Check Failed: ${error.message}`, false);
+            }
+        }
+        
+        async function testRegistration() {
+            try {
+                const response = await fetch('http://localhost:5000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test: true })
+                });
+                addResult(`Registration endpoint responding (${response.status})`, response.status < 500);
+            } catch (error) {
+                addResult(`Registration endpoint failed: ${error.message}`, false);
+            }
+        }
+        
+        async function testLogin() {
+            try {
+                const response = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test: true })
+                });
+                addResult(`Login endpoint responding (${response.status})`, response.status < 500);
+            } catch (error) {
+                addResult(`Login endpoint failed: ${error.message}`, false);
+            }
+        }
+        
+        // Auto-test on load
+        window.onload = () => {
+            testBackend();
+        };
+    </script>
+</body>
+</html>

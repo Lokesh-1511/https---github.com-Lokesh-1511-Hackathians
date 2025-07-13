@@ -1,0 +1,31 @@
+[
+  {
+    "phone": "+919345437285",
+    "name": "Kishor",
+    "location": "Chennai",
+    "role": "farmer",
+    "firebaseUid": "oGl96ArAcCU50kqOhvpSvh7MEgY2",
+    "createdAt": 1752370286780,
+    "verified": true
+  },
+  {
+    "phone": "+919788296415",
+    "name": "Duraisingh",
+    "location": "Chennai",
+    "role": "consumer",
+    "firebaseUid": "Jm5n0u8S1pZ5ORS220YeZWN3dFF2",
+    "createdAt": 1752370873862,
+    "verified": true,
+    "walletAddress": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8"
+  },
+  {
+    "phone": "+919442143046",
+    "name": "karthi",
+    "location": "Chennai",
+    "role": "farmer",
+    "firebaseUid": "27nmVp6oS3bY0NkCWel5Pq7keXY2",
+    "createdAt": 1752374988096,
+    "verified": true,
+    "walletAddress": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+  }
+]

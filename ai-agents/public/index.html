@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 AgriChain AI Farming Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016 0%, #3e7b3e 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2d5016;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .language-selector {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .language-selector h3 {
+            color: #2d5016;
+            margin-bottom: 15px;
+        }
+
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .language-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .language-btn.active {
+            background: linear-gradient(135deg, #2d5016, #3e7b3e);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-section h2 {
+            color: #2d5016;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .advice-box {
+            background: #f8f9fa;
+            border-left: 5px solid #4CAF50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .buyer-result {
+            background: #e8f5e8;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .buyer-result h4 {
+            color: #2d5016;
+            margin-bottom: 10px;
+        }
+
+        .error-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            color: #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .language-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-warning {
+            background: #ff9800;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌾 AgriChain AI Farming Assistant</h1>
+            <p>Get intelligent market advice, negotiation help, and fair price guidance</p>
+            <div class="feature-highlight">
+                <strong>🤖 AI-Powered Market Intelligence</strong> | 
+                <strong>🌍 Multi-Language Support</strong> | 
+                <strong>🔗 Blockchain Integration</strong>
+            </div>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <h3>🌐 Select Your Language / अपनी भाषा चुनें / மொழியைத் தேர்ந்தெடுக்கவும்</h3>
+            <div class="language-grid" id="languageGrid">
+                <!-- Languages will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Input Form -->
+            <div class="form-section">
+                <h2>📋 Farming Details</h2>
+                <div class="form-group">
+                    <label for="farmerName">👨‍🌾 Your Name:</label>
+                    <input type="text" id="farmerName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="crop">🌾 Crop Type:</label>
+                    <input type="text" id="crop" placeholder="e.g., tomato, rice, wheat">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">⚖️ Quantity (kg):</label>
+                    <input type="number" id="quantity" placeholder="Enter quantity in kg">
+                </div>
+                <div class="form-group">
+                    <label for="price">💰 Your Expected Price (₹/kg):</label>
+                    <input type="number" id="price" step="0.01" placeholder="Enter price per kg">
+                </div>
+
+                <button class="btn" onclick="getMarketAdvice()">
+                    🎯 Get Market Analysis
+                </button>
+                <button class="btn" onclick="searchBuyers()">
+                    🔍 Search Blockchain Buyers
+                </button>
+
+                <!-- Negotiation Section -->
+                <h3 style="margin-top: 30px; color: #2d5016;">🤝 Negotiation Helper</h3>
+                <div class="form-group">
+                    <label for="buyerOffer">💵 Buyer's Offer (₹/kg):</label>
+                    <input type="number" id="buyerOffer" step="0.01" placeholder="Buyer's offered price">
+                </div>
+                <div class="form-group">
+                    <label for="buyerName">🏪 Buyer Name:</label>
+                    <input type="text" id="buyerName" placeholder="Buyer's name (optional)">
+                </div>
+                <button class="btn" onclick="getNegotiationHelp()">
+                    💡 Get Negotiation Advice
+                </button>
+            </div>
+
+            <!-- Results -->
+            <div class="results-section">
+                <h2>📊 AI Analysis & Recommendations</h2>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Getting AI analysis...</p>
+                </div>
+
+                <div id="results">
+                    <p style="color: #666; text-align: center; padding: 40px;">
+                        Enter your farming details and click on any button to get AI-powered advice.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'en';
+        const API_BASE = '/api';
+
+        // Load languages on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLanguages();
+        });
+
+        // Load available languages
+        async function loadLanguages() {
+            try {
+                const response = await fetch(`${API_BASE}/languages`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const grid = document.getElementById('languageGrid');
+                    grid.innerHTML = '';
+                    
+                    Object.entries(data.languages).forEach(([code, name]) => {
+                        const button = document.createElement('button');
+                        button.className = `language-btn ${code === 'en' ? 'active' : ''}`;
+                        button.textContent = name;
+                        button.onclick = () => setLanguage(code, button);
+                        grid.appendChild(button);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load languages:', error);
+            }
+        }
+
+        // Set language
+        function setLanguage(code, button) {
+            currentLanguage = code;
+            
+            // Update active button
+            document.querySelectorAll('.language-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        // Show loading
+        function showLoading(show = true) {
+            const loading = document.getElementById('loading');
+            if (show) {
+                loading.classList.add('show');
+            } else {
+                loading.classList.remove('show');
+            }
+        }
+
+        // Display results
+        function displayResults(title, content, type = 'advice') {
+            const results = document.getElementById('results');
+            
+            let statusIndicator = '';
+            if (type === 'buyer') {
+                statusIndicator = '<span class="status-indicator status-success">Buyer Found</span>';
+            } else if (type === 'no-buyer') {
+                statusIndicator = '<span class="status-indicator status-warning">No Buyers</span>';
+            }
+            
+            results.innerHTML = `
+                <h3>${title}${statusIndicator}</h3>
+                <div class="advice-box">${content}</div>
+            `;
+        }
+
+        // Display error
+        function displayError(message) {
+            const results = document.getElementById('results');
+            results.innerHTML = `<div class="error-box">${message}</div>`;
+        }
+
+        // Get form data
+        function getFormData() {
+            return {
+                farmerName: document.getElementById('farmerName').value,
+                crop: document.getElementById('crop').value,
+                quantity: parseInt(document.getElementById('quantity').value),
+                price: parseFloat(document.getElementById('price').value),
+                language: currentLanguage
+            };
+        }
+
+        // Validate form data
+        function validateFormData(data, requiredFields = ['crop', 'quantity', 'price']) {
+            for (const field of requiredFields) {
+                if (!data[field] || (typeof data[field] === 'number' && isNaN(data[field]))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Get market advice
+        async function getMarketAdvice() {
+            const data = getFormData();
+            
+            if (!validateFormData(data)) {
+                displayError('Please fill in crop type, quantity, and expected price.');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/market-advice`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults('🎯 Market Analysis & Price Advice', result.advice);
+                } else {
+                    displayError('Failed to get market advice. Please try again.');
+                }
+            } catch (error) {
+                displayError('Network error. Please check your connection and try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Search for buyers
+        async function searchBuyers() {
+            const data = getFormData();
+            
+            if (!validateFormData(data)) {
+                displayError('Please fill in crop type, quantity, and expected price.');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/search-buyers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        crop: data.crop,
+                        quantity: data.quantity,
+                        minPrice: data.price
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success && result.result.found) {
+                    const buyer = result.result.buyer;
+                    const content = `🏪 Buyer Found: ${buyer.name}
+💰 Offering: ₹${buyer.pricePerKg}/kg
+📦 Wants: ${buyer.quantity}kg of ${buyer.item}
+🔗 Address: ${buyer.address}
+
+This is a great match! Consider accepting this offer or use it as a starting point for negotiation.`;
+                    
+                    displayResults('✅ Blockchain Buyer Search Results', content, 'buyer');
+                } else {
+                    const content = `No buyers found on the blockchain at your expected price of ₹${data.price}/kg.
+
+🔄 Suggestions:
+• Lower your asking price slightly
+• Wait for market conditions to improve  
+• Check local mandi prices
+• Consider direct marketing to consumers
+
+Use the Market Analysis feature for pricing guidance.`;
+                    
+                    displayResults('❌ No Buyers Found', content, 'no-buyer');
+                }
+            } catch (error) {
+                displayError('Network error while searching for buyers. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Get negotiation help
+        async function getNegotiationHelp() {
+            const data = getFormData();
+            const buyerOffer = parseFloat(document.getElementById('buyerOffer').value);
+            const buyerName = document.getElementById('buyerName').value || 'Buyer';
+            
+            if (!validateFormData(data) || isNaN(buyerOffer)) {
+                displayError('Please fill in all required fields including buyer\'s offer.');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/negotiation-help`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        crop: data.crop,
+                        farmerPrice: data.price,
+                        buyerOffer: buyerOffer,
+                        buyerName: buyerName,
+                        language: currentLanguage
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults('🤝 Negotiation Strategy & Advice', result.advice);
+                } else {
+                    displayError('Failed to get negotiation advice. Please try again.');
+                }
+            } catch (error) {
+                displayError('Network error. Please check your connection and try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>

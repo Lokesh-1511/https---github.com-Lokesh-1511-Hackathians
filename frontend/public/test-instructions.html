@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriChain Consumer Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #007bff; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 AgriChain Consumer Dashboard Test</h1>
+        
+        <div class="info">
+            <p><strong>Instructions:</strong></p>
+            <ol>
+                <li>Make sure you're logged in as a consumer at <a href="http://localhost:5174" target="_blank">http://localhost:5174</a></li>
+                <li>Open browser console (F12) on the AgriChain page</li>
+                <li>Copy and run the test commands below</li>
+            </ol>
+        </div>
+
+        <h2>✅ Fixed Issues:</h2>
+        <ul class="success">
+            <li>✅ Import error for OTPVerificationPage - FIXED</li>
+            <li>✅ Statistics not updating in Firestore - FIXED</li>
+            <li>✅ Favorite farmers not persisting - FIXED</li>
+            <li>✅ Cart page implementation - COMPLETED</li>
+            <li>✅ OTP verification page - COMPLETED</li>
+        </ul>
+
+        <h2>🧪 Test Commands (Copy to Browser Console):</h2>
+        
+        <h3>1. Fix Statistics (Replace with your phone number):</h3>
+        <div class="code">
+// Replace "+911234567890" with your actual phone number from login
+const yourPhone = "+911234567890";
+await AgriChainTest.fixStats(yourPhone);
+        </div>
+
+        <h3>2. Test Saving Farmers:</h3>
+        <div class="code">
+// Save a test farmer
+await AgriChainTest.consumer.saveFarmer(yourPhone, {
+    phone: "+919999999999", 
+    name: "Test Farmer", 
+    location: "Test Location"
+});
+
+// Check saved farmers
+const farmers = await AgriChainTest.consumer.getSavedFarmers(yourPhone);
+console.log("Saved farmers:", farmers);
+        </div>
+
+        <h3>3. Check Updated Statistics:</h3>
+        <div class="code">
+// Get current stats
+const stats = await AgriChainTest.consumer.getStats(yourPhone);
+console.log("Current statistics:", stats);
+        </div>
+
+        <h3>4. Test Cart Functionality:</h3>
+        <div class="code">
+// Get current cart
+const cart = await AgriChainTest.consumer.getCart(yourPhone);
+console.log("Current cart:", cart);
+        </div>
+
+        <h2>🎯 Expected Results:</h2>
+        <ul>
+            <li><strong>Statistics:</strong> Should show non-zero values for orders, purchases, bids, etc.</li>
+            <li><strong>Saved Farmers:</strong> Should persist after page refresh</li>
+            <li><strong>Cart:</strong> Should work with "View Cart" and "Checkout" buttons</li>
+            <li><strong>Navigation:</strong> "Verify Deliveries" button should open OTP page</li>
+        </ul>
+
+        <h2>🔗 Navigation Test:</h2>
+        <p>After running the tests, try these features on the dashboard:</p>
+        <ul>
+            <li>Click "View Cart" button</li>
+            <li>Click "Verify Deliveries" button</li>
+            <li>Click "Refresh" button to see updated stats</li>
+            <li>Save/unsave farmers and watch the statistics update</li>
+        </ul>
+
+        <div class="success">
+            <h3>🎉 Success Indicators:</h3>
+            <p>If everything is working correctly, you should see:</p>
+            <ul>
+                <li>No console errors in the browser</li>
+                <li>Statistics showing actual numbers (not all zeros)</li>
+                <li>Saved farmers count updating when you save/remove farmers</li>
+                <li>Cart page opening when you click "View Cart"</li>
+                <li>OTP verification page opening when you click "Verify Deliveries"</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

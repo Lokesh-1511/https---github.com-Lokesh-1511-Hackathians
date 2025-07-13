@@ -1,0 +1,491 @@
+import React, { useState } from 'react'
+import { ArrowLeft, CreditCard, Truck, Lock, CheckCircle } from 'lucide-react'
+import { paymentService } from '../../services/paymentService'
+import { consumerService } from '../../services/consumerService'
+
+const Checkout = ({ cartItems, onBack, onPaymentSuccess, user }) => {
+  const [currentStep, setCurrentStep] = useState(1) // 1: Details, 2: Payment, 3: Success
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    // Billing Details
+    name: user?.name || '',
+    email: '',
+    phone: user?.phone || '',
+    address: '',
+    city: '',
+    pincode: '',
+    
+    // Delivery Details
+    deliveryAddress: '',
+    deliveryCity: '',
+    deliveryPincode: '',
+    deliveryInstructions: '',
+    
+    // Payment
+    paymentMethod: 'card'
+  })
+
+  const orderSummary = paymentService.calculateOrderTotal(cartItems)
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleProceedToPayment = () => {
+    // Validate billing details
+    if (!formData.name || !formData.email || !formData.phone || !formData.address) {
+      alert('Please fill in all required billing details')
+      return
+    }
+    setCurrentStep(2)
+  }
+
+  const handlePayment = async () => {
+    try {
+      setLoading(true)
+
+      // Create order first
+      const orderData = {
+        consumerPhone: user.phone,
+        consumerName: user.name,
+        items: cartItems,
+        totalAmount: orderSummary.total,
+        subtotal: orderSummary.subtotal,
+        taxes: orderSummary.taxes,
+        deliveryCharges: orderSummary.deliveryCharges,
+        billingDetails: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          pincode: formData.pincode
+        },
+        deliveryDetails: {
+          address: formData.deliveryAddress || formData.address,
+          city: formData.deliveryCity || formData.city,
+          pincode: formData.deliveryPincode || formData.pincode,
+          instructions: formData.deliveryInstructions
+        },
+        paymentMethod: formData.paymentMethod
+      }
+
+      const orderResult = await consumerService.createOrder(orderData)
+      
+      if (!orderResult.success) {
+        throw new Error(orderResult.error)
+      }
+
+      // Process payment
+      const paymentData = {
+        orderId: orderResult.orderId,
+        consumerPhone: user.phone,
+        amount: orderSummary.total,
+        currency: 'INR',
+        paymentMethod: formData.paymentMethod,
+        items: cartItems,
+        billingDetails: orderData.billingDetails,
+        metadata: {
+          orderId: orderResult.orderId,
+          consumerName: user.name
+        }
+      }
+
+      const paymentResult = await paymentService.processPayment(paymentData)
+
+      if (paymentResult.success) {
+        // Save payment record
+        const saveResult = await consumerService.savePayment(paymentResult.paymentRecord)
+        
+        if (saveResult.success) {
+          // Update order status
+          await consumerService.updateOrderStatus(orderResult.orderId, 'paid')
+          
+          // Clear cart
+          await consumerService.clearCart(user.phone)
+          
+          setCurrentStep(3)
+          
+          // Call success callback after a delay
+          setTimeout(() => {
+            onPaymentSuccess({
+              orderId: orderResult.orderId,
+              paymentId: saveResult.paymentId,
+              transactionId: paymentResult.transactionId
+            })
+          }, 3000)
+        } else {
+          throw new Error('Payment processed but failed to save record')
+        }
+      } else {
+        throw new Error(paymentResult.error)
+      }
+    } catch (error) {
+      console.error('Payment error:', error)
+      alert(error.message || 'Payment failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const renderBillingDetails = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-white mb-4">Billing Details</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Full Name *
+          </label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
+            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Email *
+          </label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Phone *
+          </label>
+          <input
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => handleInputChange('phone', e.target.value)}
+            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Pincode *
+          </label>
+          <input
+            type="text"
+            value={formData.pincode}
+            onChange={(e) => handleInputChange('pincode', e.target.value)}
+            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Enter pincode"
+            required
+          />
+        </div>
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Address *
+        </label>
+        <textarea
+          value={formData.address}
+          onChange={(e) => handleInputChange('address', e.target.value)}
+          className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Enter your complete address"
+          rows="3"
+          required
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          City *
+        </label>
+        <input
+          type="text"
+          value={formData.city}
+          onChange={(e) => handleInputChange('city', e.target.value)}
+          className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Enter your city"
+          required
+        />
+      </div>
+
+      <div className="mt-6">
+        <h4 className="text-md font-semibold text-white mb-3">Delivery Information</h4>
+        <div className="flex items-center mb-3">
+          <input
+            type="checkbox"
+            id="sameAsBilling"
+            checked={!formData.deliveryAddress}
+            onChange={(e) => {
+              if (e.target.checked) {
+                handleInputChange('deliveryAddress', '')
+                handleInputChange('deliveryCity', '')
+                handleInputChange('deliveryPincode', '')
+              }
+            }}
+            className="mr-2"
+          />
+          <label htmlFor="sameAsBilling" className="text-gray-300">
+            Same as billing address
+          </label>
+        </div>
+        
+        {formData.deliveryAddress !== '' && (
+          <div className="space-y-3">
+            <input
+              type="text"
+              value={formData.deliveryAddress}
+              onChange={(e) => handleInputChange('deliveryAddress', e.target.value)}
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Delivery address"
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                type="text"
+                value={formData.deliveryCity}
+                onChange={(e) => handleInputChange('deliveryCity', e.target.value)}
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Delivery city"
+              />
+              <input
+                type="text"
+                value={formData.deliveryPincode}
+                onChange={(e) => handleInputChange('deliveryPincode', e.target.value)}
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Delivery pincode"
+              />
+            </div>
+          </div>
+        )}
+        
+        <textarea
+          value={formData.deliveryInstructions}
+          onChange={(e) => handleInputChange('deliveryInstructions', e.target.value)}
+          className="w-full mt-3 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Delivery instructions (optional)"
+          rows="2"
+        />
+      </div>
+    </div>
+  )
+
+  const renderPaymentMethod = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-white mb-4">Payment Method</h3>
+      
+      <div className="space-y-3">
+        <div className="p-4 bg-white/10 border border-white/20 rounded-lg">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="card"
+              name="paymentMethod"
+              value="card"
+              checked={formData.paymentMethod === 'card'}
+              onChange={(e) => handleInputChange('paymentMethod', e.target.value)}
+              className="mr-3"
+            />
+            <CreditCard className="w-5 h-5 mr-2 text-green-400" />
+            <label htmlFor="card" className="text-white">Credit/Debit Card</label>
+          </div>
+        </div>
+        
+        <div className="p-4 bg-white/10 border border-white/20 rounded-lg">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="upi"
+              name="paymentMethod"
+              value="upi"
+              checked={formData.paymentMethod === 'upi'}
+              onChange={(e) => handleInputChange('paymentMethod', e.target.value)}
+              className="mr-3"
+            />
+            <div className="w-5 h-5 mr-2 bg-purple-500 rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-white">₹</span>
+            </div>
+            <label htmlFor="upi" className="text-white">UPI Payment</label>
+          </div>
+        </div>
+        
+        <div className="p-4 bg-white/10 border border-white/20 rounded-lg">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="cod"
+              name="paymentMethod"
+              value="cod"
+              checked={formData.paymentMethod === 'cod'}
+              onChange={(e) => handleInputChange('paymentMethod', e.target.value)}
+              className="mr-3"
+            />
+            <Truck className="w-5 h-5 mr-2 text-orange-400" />
+            <label htmlFor="cod" className="text-white">Cash on Delivery</label>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+        <Lock className="w-4 h-4 mr-2 text-green-400" />
+        <span className="text-sm text-green-100">Your payment information is secure and encrypted</span>
+      </div>
+    </div>
+  )
+
+  const renderOrderSummary = () => (
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6">
+      <h3 className="text-lg font-semibold text-white mb-4">Order Summary</h3>
+      
+      <div className="space-y-3 mb-4">
+        {cartItems.map((item, index) => (
+          <div key={index} className="flex justify-between items-center">
+            <div>
+              <span className="text-white">{item.name}</span>
+              <span className="text-gray-400 ml-2">x{item.quantity}</span>
+            </div>
+            <span className="text-white">
+              {paymentService.formatCurrency(item.price * item.quantity)}
+            </span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="border-t border-white/20 pt-4 space-y-2">
+        <div className="flex justify-between text-gray-300">
+          <span>Subtotal</span>
+          <span>{paymentService.formatCurrency(orderSummary.subtotal)}</span>
+        </div>
+        <div className="flex justify-between text-gray-300">
+          <span>Delivery Charges</span>
+          <span>{paymentService.formatCurrency(orderSummary.deliveryCharges)}</span>
+        </div>
+        <div className="flex justify-between text-gray-300">
+          <span>Taxes</span>
+          <span>{paymentService.formatCurrency(orderSummary.taxes)}</span>
+        </div>
+        <div className="flex justify-between text-white font-semibold text-lg border-t border-white/20 pt-2">
+          <span>Total</span>
+          <span>{paymentService.formatCurrency(orderSummary.total)}</span>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderSuccess = () => (
+    <div className="text-center">
+      <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+      <h3 className="text-2xl font-semibold text-white mb-2">Payment Successful!</h3>
+      <p className="text-gray-300 mb-4">
+        Your order has been placed successfully. You will receive a confirmation email shortly.
+      </p>
+      <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+        <p className="text-white">
+          <strong>Total Paid:</strong> {paymentService.formatCurrency(orderSummary.total)}
+        </p>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-900 via-blue-900 to-purple-900 p-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center mb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white transition-colors mr-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </button>
+          <h1 className="text-2xl font-bold text-white">Checkout</h1>
+        </div>
+
+        {/* Progress Steps */}
+        <div className="flex items-center justify-center mb-8">
+          {[1, 2, 3].map((step) => (
+            <div key={step} className="flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                step <= currentStep ? 'bg-green-500 text-white' : 'bg-white/20 text-gray-400'
+              }`}>
+                {step}
+              </div>
+              {step < 3 && (
+                <div className={`w-16 h-1 mx-2 ${
+                  step < currentStep ? 'bg-green-500' : 'bg-white/20'
+                }`} />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6">
+              {currentStep === 1 && renderBillingDetails()}
+              {currentStep === 2 && renderPaymentMethod()}
+              {currentStep === 3 && renderSuccess()}
+
+              {/* Action Buttons */}
+              {currentStep === 1 && (
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={handleProceedToPayment}
+                    className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors"
+                  >
+                    Proceed to Payment
+                  </button>
+                </div>
+              )}
+
+              {currentStep === 2 && (
+                <div className="mt-6 flex justify-between">
+                  <button
+                    onClick={() => setCurrentStep(1)}
+                    className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handlePayment}
+                    disabled={loading}
+                    className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-500 text-white rounded-lg font-semibold transition-colors flex items-center"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                        Processing...
+                      </>
+                    ) : (
+                      `Pay ${paymentService.formatCurrency(orderSummary.total)}`
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Order Summary Sidebar */}
+          <div className="lg:col-span-1">
+            {renderOrderSummary()}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Checkout
